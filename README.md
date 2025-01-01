@@ -79,4 +79,4 @@ flush()
 
 ** -- Save the main buffer as a bitmap ( before use this call flush() ) **
 
-saveBitmap(self,file)
+saveBitmap(file)
