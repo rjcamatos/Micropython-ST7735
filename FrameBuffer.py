@@ -110,6 +110,7 @@ class FrameBuffer:
 
         self._charTable = None
 
+    @micropython.native
     def setWindow(self,startX,endX,startY,endY,copy=False):
         self._window.setWindow(startX,endX,startY,endY,copy)
 
@@ -167,6 +168,7 @@ class FrameBuffer:
     def _getOffset(self,xPos,yPos):
         return [xPos*self._window._windowColumnSize,yPos*self._window._windowRowSize]
 
+    @micropython.native
     def setPixel(self,xPos,yPos):
         if self._color == None: return
 
@@ -234,6 +236,7 @@ class FrameBuffer:
                     self._window._windowBuffer[startOffset+nByte] = self._color[nByte]
 
 
+    @micropython.native
     def drawLine(self,startX,endX,startY,endY):
         width = (endX-startX)
         height = (endY-startY)
@@ -250,6 +253,7 @@ class FrameBuffer:
             colStep += colInc
 
 
+    @micropython.native
     def drawLineH(self,xPos,yPos,size):
         rangeStep = int(self._thikness/2) + 1
         if size < 0: rangeStep *= -1
@@ -257,6 +261,7 @@ class FrameBuffer:
         for step in range(0,size,rangeStep):
             self.setPixel(xPos+step,yPos)
     
+    @micropython.native
     def drawLineV(self,xPos,yPos,size):
         rangeStep = int(self._thikness/2) + 1
         if size < 0: rangeStep *= -1
@@ -264,6 +269,7 @@ class FrameBuffer:
         for step in range(0,size,rangeStep):
             self.setPixel(xPos,yPos+step)
 
+    @micropython.native
     def drawRectangle(self,xPos,yPos,width,height,fill=False):
         if fill == True:
             self.setThikness(0)
@@ -291,7 +297,7 @@ class FrameBuffer:
     def drawSquare(self,xPos,yPos,size,fill=False):
         self.drawRectangle(xPos,yPos,size,size,fill)
  
-
+    @micropython.native
     def drawCircle(self,xPos,yPos,radius,fill=False):
         angle = 0
         while angle <= 360:
@@ -313,9 +319,9 @@ class FrameBuffer:
             
             self.setPixel(xPos+x,yPos+y)
             
-            angle += 0.2
+            angle += 1.8
 
-
+    
     def loadFont(self,file,debug=False):
         self._charTable = open(file,'rb')
         
@@ -342,6 +348,7 @@ class FrameBuffer:
             for nByte in range(self._charTableWidth*self._charTableHeight*self._window._bytes):
                 self._window._windowBuffer[nByte] = self._charTable[nByte]
 
+    @micropython.native
     def printChar(self,xPos,yPos,char):
         if self._charTable == None: return
 

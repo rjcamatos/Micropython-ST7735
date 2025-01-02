@@ -69,7 +69,7 @@ while True:
 
     if xHline > 78: xInc *= -1
     if xHline < 4: xInc *= -1
-    #start_time = time.ticks_ms()
+    start_time = time.ticks_ms()
     data.setColor(0,255,0,True)
     data.setWindow(0,128,10,20)
     data.setThikness(3)
@@ -77,13 +77,13 @@ while True:
     data.drawLineH(xHline,3,50)
     data.flush()
     xHline += xInc
-    #end_time = time.ticks_ms()
-    #print("HLine mS", (end_time-start_time) )
+    end_time = time.ticks_ms()
+    print("HLine mS", (end_time-start_time) )
 
 
     if rCircle > 25: rInc *= -1
     if rCircle < 4: rInc *= -1
-    #start_time = time.ticks_ms()
+    start_time = time.ticks_ms()
     data.setColor(0,255,0,True)
     data.setWindow(0,128,80,160)
     data.setThikness(0)
@@ -91,7 +91,7 @@ while True:
     data.drawCircle(64,40,rCircle)
     data.flush()
     rCircle += rInc
-    #end_time = time.ticks_ms()
-    #print("CIRCLE mS", (end_time-start_time) )
+    end_time = time.ticks_ms()
+    print("CIRCLE mS", (end_time-start_time) )
 
     led.value(0)

@@ -217,7 +217,7 @@ class ST7735(object) :
         '''Turn display on or off.'''
         self._writecommand(ST7735.DISPON if aTF else ST7735.DISPOFF)
 
-    #   @micropython.native
+    @micropython.native
     def _setwindowloc( self, aPos0, aPos1 ) :
         '''Set a rectangular area for drawing a color to.'''
         self._writecommand(ST7735.CASET)            #Column address set.
@@ -236,7 +236,7 @@ class ST7735(object) :
 
         self._writecommand(ST7735.RAMWR)            #Write to RAM.
 
-    #@micropython.native
+    @micropython.native
     def _writecommand( self, aCommand ) :
         '''Write given command to the device.'''
         self.dc(0)
@@ -244,7 +244,7 @@ class ST7735(object) :
         self.spi.write(bytearray([aCommand]))
         self.cs(1)
 
-    #@micropython.native
+    @micropython.native
     def _writedata( self, aData ) :
         '''Write given data to the device.  This may be
             either a single int or a bytearray of values.'''
@@ -253,14 +253,12 @@ class ST7735(object) :
         self.spi.write(aData)
         self.cs(1)
 
-    #@micropython.native
     def _setMADCTL( self ) :
         '''Set screen rotation and RGB/BGR format.'''
         self._writecommand(ST7735.MADCTL)
         rgb = ST7735RGB if self._rgb else ST7735BGR
         self._writedata(bytearray([ST7735Rotations[self.rotate] | rgb]))
 
-    #@micropython.native
     def _reset( self ) :
         '''Reset the device.'''
         self.dc(0)
@@ -271,6 +269,7 @@ class ST7735(object) :
         self.reset(1)
         time.sleep_us(500)
 
+    @micropython.native
     def setWindow(self,columnStart,columnEnd,rowStart,rowEnd,copy=True):
         
         if columnStart < 0: columnStart *= -1
