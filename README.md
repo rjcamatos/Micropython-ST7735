@@ -61,7 +61,11 @@ drawSquare(xPos,yPos,size,fill=False)
 
 drawCircle(xPos,yPos,radius,fill=False)
 
-** -- Load a font to print charecters as it is **
+** -- Load image at given position (need to be same bit depth)  **
+
+loadFont(file)
+
+** -- Load a font to print charecters as it is (need to be same bit depth) **
 
 loadFont(file)
 
