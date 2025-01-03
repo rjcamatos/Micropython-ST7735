@@ -80,7 +80,7 @@ class MemoryWindow:
 
 class FrameBuffer:
 
-    def __init__(self,columns,rows,bits=16,window=None,endian='big'):
+    def __init__(self,columns,rows,bits=16,window=None,endian='little'):
 
         self._window = window
         if self._window == None: self._window = MemoryWindow()
@@ -93,7 +93,7 @@ class FrameBuffer:
         self._endian = endian
 
         self._flipV = -1
-        self._flipH = -1
+        self._flipH = 1
 
         self._rotation = 0
         self._xOrigin = 0
@@ -316,7 +316,7 @@ class FrameBuffer:
             
             angle += inc
 
-    def loadRaw(self,xPos,yPos,width,height,bytes):
+    def loadRaw(self,xPos,yPos,width,height,rawBytes):
         self._flipV *= -1
         sRow = 0
         for r in range(height):
@@ -326,8 +326,9 @@ class FrameBuffer:
                 if c > self._window._windowColumns-1 : break
                 startOffset = self._getOffset(xPos+c,yPos+r)
                 startOffset = int(self._flipH*(startOffset[0]))+int(self._flipV*(startOffset[1]))
+                #data = int.from_bytes(rawBytes[sRow + sCol:sRow + sCol+self._window._bytes]).to_bytes(self._window._bytes) #fix endianess
                 for nByte in range(self._window._bytes):
-                    self._window._windowBuffer[startOffset+nByte] = bytes[sRow + sCol + nByte]
+                    self._window._windowBuffer[startOffset+nByte] = rawBytes[sRow + sCol + nByte]
                 sCol += self._window._bytes
             sRow += width * self._window._bytes
         self._flipV *= -1

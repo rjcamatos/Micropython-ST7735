@@ -326,7 +326,7 @@ class FrameBuffer:
                 if c > self._window._windowColumns-1 : break
                 startOffset = self._getOffset(xPos+c,yPos+r)
                 startOffset = int(self._flipH*(startOffset[0]))+int(self._flipV*(startOffset[1]))
-                data = int.from_bytes(rawBytes[sRow + sCol:sRow + sCol+self._window._bytes]).to_bytes(self._window._bytes,'little')
+                data = int.from_bytes(rawBytes[sRow + sCol:sRow + sCol+self._window._bytes]).to_bytes(self._window._bytes) #fix endianess
                 for nByte in range(self._window._bytes):
                     self._window._windowBuffer[startOffset+nByte] = data[nByte]
                 sCol += self._window._bytes
@@ -348,7 +348,6 @@ class FrameBuffer:
         height = dib_header[2]
         raw = image.read()
         image.close()
-        
         self.loadRaw(xPos,yPos,width,height,raw)
 
 
