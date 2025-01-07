@@ -5,86 +5,90 @@ A Python ST7735 Canvas Painter for Micropython
 
 # *** Canvas Painter v0.2 API TO ST7735 ***
 
-** -- Construct the main object, bits should be 16 and window an ST7735 object, or it will be a virtual canvas painter buffer **
+# -- Construct the main object, bits should be 16 and window an ST7735 object
 
-Canvas(columns,rows,bits=16,window=None,endian='big')
+CanvasPainter(columns=128,rows=160,bits=16,window=None,endian='big')
 
-**-- Set the the window area to be draw (Mandatory, at least once) **
+# -- Set the the window area to be draw (Mandatory, at least once)
 
 setWindow(startX,endX,startY,endY,copy=True)
 
-** -- Set the current color, if "isFillColor=True" sets the fill color **
+# -- Set the current color (Color type: COLOR_LINE, COLOR_FILL, COLOR_TRANSPARENCY)
 
-setColor(R,G,B,isFillColor=False)
+setColor(R,G,B,colorType=CanvasPainter.COLOR_LINE):
 
-** -- Restore to last previous color, if "isFillColor=True" restore the fill color **
+# -- Restore to last previous color (Color type: COLOR_LINE, COLOR_FILL, COLOR_TRANSPARENCY)
 
-restoreColor(isFillColor=False):
+restoreColor(colorType=CanvasPainter.COLOR_LINE):
 
-** -- Set current border thikness **
+# -- Clear current color (Color type: COLOR_LINE, COLOR_FILL, COLOR_TRANSPARENCY)
 
-setThikness(thikness)
+clearColor(colorType=CanvasPainter.COLOR_FILL):
 
-** -- Restore to last previous border thikness **
+# -- Set current border thikness
 
-restoreThikness()
+setThikness(thikness):
 
-** -- Set rotation to given degress, with the given x and y as origin (x and y should be the center of the image to rotate) call with empty args to set normal painting **
+# -- Restore to last previous border thikness
 
-setRotation(degress=0,xOrigin=0,yOrigin=0)
+restoreThikness():
 
-** -- Set a pixel with the current color **
+# -- Set rotation to given degress, with the given x and y as origin (x and y should be the center of the image to rotate) call with empty args to set normal painting
 
-setPixel(xPos,yPos)
+setRotation(degress=0,xOrigin=0,yOrigin=0):
 
-** -- Draw a line ** 
+# -- Set a pixel with the current color
 
-drawLine(startX,endX,startY,endY)
+setPixel(xPos,yPos):
 
-** -- Draw a horizontal line **
+# -- Draw a line
 
-drawLineH(xPos,yPos,size)
+drawLine(startX,endX,startY,endY):
 
-** -- Draw a vertical line **
+# -- Draw a horizontal line
 
-drawLineV(xPos,yPos,size)
+drawLineH(xPos,yPos,size):
 
-** -- Draw a rectangle, if "fill=True", fill with the fill color **
+# -- Draw a vertical line
 
-drawRectangle(xPos,yPos,width,height,fill=False)
+drawLineV(xPos,yPos,size):
 
-** -- Draw a square, if "fill=True", fill with the fill color **
+# -- Draw a rectangle, if "fill=True", fill with the fill color
 
-drawSquare(xPos,yPos,size,fill=False)
+drawRectangle(xPos,yPos,width,height,fill=False):
 
-** -- Draw a circle, if "fill=True", fill with the fill color **
+# -- Draw a square, if "fill=True", fill with the fill color
 
-drawCircle(xPos,yPos,radius,fill=False)
+drawSquare(xPos,yPos,size,fill=False):
 
-** -- Load image at given position from raw bytes (need to be same bit depth)
+# -- Draw a circle, if "fill=True", fill with the fill color
+
+drawCircle(xPos,yPos,radius,fill=False):
+
+# -- Load image at given position from raw bytes (need to be same bit depth)
 
 loadRaw(xPos,yPos,width,height,rawBytes)
 
-** -- Load image at given position (need to be same bit depth, and need to be big endian)  **
+# -- Load image at given position (need to be same bit depth)
 
-loadImage(xPos,yPos,file):
+loadImage(xPos,yPos,file)
 
-** -- Load font to print charecters as it is (need to be same bit depth) **
+# -- Load a font to print charecters as it is (need to be same bit depth)
 
-loadFont(file)
+loadFont(file):
 
-** -- Print a given charecter **
+# -- Print a given charecter
 
-printChar(xPos,yPos,char)
+printChar(xPos,yPos,char):
 
-** -- Print a given string **
+# -- Print a given string 
 
-printChars(xPos,yPos,chars)
+printChars(xPos,yPos,chars):
 
-** -- Write the contents to main buffer **
+# -- Write the contents to main buffer
 
-flush()
+flush():
 
-** -- Save the main buffer as a bitmap ( before use this call flush() ) **
+# -- Save the main buffer as a bitmap ( before use this call flush() )
 
-saveBitmap(file)
+saveBitmap(file):

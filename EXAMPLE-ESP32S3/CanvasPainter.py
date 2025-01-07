@@ -64,7 +64,11 @@ class CanvasPainterWindow:
 
 class CanvasPainter:
 
-    def __init__(self,columns,rows,bits=16,window=None,endian='big'):
+    COLOR_LINE = 0
+    COLOR_FILL = 1
+    COLOR_TRANSPARENCY = 2
+
+    def __init__(self,columns=128,rows=160,bits=16,window=None,endian='big'):
 
         self._window = window
         if self._window == None: self._window = CanvasPainterWindow()
@@ -94,6 +98,9 @@ class CanvasPainter:
         self._fillColor = None
         self._tmpFillColor = None
 
+        self._transparencyColor = None
+        self._tmpTransparencyColor = None
+
         self._thikness = 0
         self._tmpThikness = 0
 
@@ -112,7 +119,7 @@ class CanvasPainter:
                 self._window._windowBuffer[nByte] = random.getrandbits(8)
 
 
-    def setColor(self,R,G,B,isFillColor=False):
+    def setColor(self,R,G,B,colorType=0):
         
         color = None
 
@@ -129,16 +136,27 @@ class CanvasPainter:
         if self._window._bits == 32: #OK
             color = int( (0xFF<<24|R<<16|G<<8|B) ).to_bytes(4,self._endian)
 
-        if isFillColor == False:
-            self._color = bytes(color)
-        else:
-            self._fillColor = bytes(color)
+        if colorType ==  CanvasPainter.COLOR_LINE:
+            self._tmpColor = self._color
+            self._color = color
 
-    def restoreColor(self,isFillColor=False):
-        if isFillColor == False:
-            self._color = self._tmpColor
-        else:
-            self._fillColor = self._tmpFillColor
+        if colorType ==  CanvasPainter.COLOR_FILL:
+            self._tmpFillColor = self._fillColor
+            self._fillColor = color
+
+        if colorType ==  CanvasPainter.COLOR_TRANSPARENCY:
+            self._tmpTransparencyColor = self._transparencyColor
+            self._transparencyColor = color
+
+    def restoreColor(self,colorType=0):
+        if colorType == CanvasPainter.COLOR_LINE: self._color = self._tmpColor
+        if colorType == CanvasPainter.COLOR_FILL: self._fillColor = self._tmpFillColor
+        if colorType == CanvasPainter.COLOR_TRANSPARENCY: self._transparencyColor = self._tmpTransparencyColor
+
+    def clearColor(self,colorType=1):
+        if colorType == CanvasPainter.COLOR_LINE: self._color = None
+        if colorType ==  CanvasPainter.COLOR_FILL: self._fillColor = None
+        if colorType ==  CanvasPainter.COLOR_TRANSPARENCY: self._transparencyColor = None
 
     def setThikness(self,thikness):
         self._tmpThikness = self._thikness
@@ -203,9 +221,7 @@ class CanvasPainter:
                         if neighbor[r][c] == 0: continue
                         startOffset = self._getOffset(xPos+r,yPos+c)
                         startOffset = int(self._flipH*(startOffset[0]))+int(self._flipV*(startOffset[1]))
-                        self._window._windowBuffer[startOffset:startOffset+self._window._bytes] = self._color
-        
-                        
+                        self._window._windowBuffer[startOffset:startOffset+self._window._bytes] = self._color                        
 
         #IMPLEMENTATION OF SET THE PIXEL
         startOffset = self._getOffset(xPos,yPos)
@@ -315,8 +331,9 @@ class CanvasPainter:
                 if (xPos+c) > self._window._windowColumns: break
                 startOffset = self._getOffset(xPos+c,yPos+r)
                 startOffset = int(self._flipH*(startOffset[0]))+int(self._flipV*(startOffset[1]))
-                for nByte in range(self._window._bytes):
-                    self._window._windowBuffer[startOffset+nByte] = rawBytes[sRow + sCol + nByte]
+                color =rawBytes[sRow + sCol:sRow+sCol+self._window._bytes]
+                if color != self._transparencyColor:
+                    self._window._windowBuffer[startOffset:startOffset+self._window._bytes] = color
                 sCol += self._window._bytes
             sRow += width * self._window._bytes
         self._flipV *= -1
