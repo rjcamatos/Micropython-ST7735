@@ -1,6 +1,7 @@
 import struct
 import random
 import math
+import sys
 
 class CanvasWindow:
 
@@ -75,6 +76,11 @@ class Canvas:
         self._window._buffer = None 
 
         self._endian = endian
+        if self._endian == None:
+            if (1<<1) > 0:
+                self._endian = 'little'
+            else:
+                self._endian = 'big'
 
         self._flipV = -1
         self._flipH = -1

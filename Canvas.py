@@ -64,7 +64,7 @@ class CanvasWindow:
 
 class Canvas:
 
-    def __init__(self,columns,rows,bits=16,window=None,endian='big'):
+    def __init__(self,columns,rows,bits=16,window=None,endian=None):
 
         self._window = window
         if self._window == None: self._window = CanvasWindow()
@@ -74,7 +74,11 @@ class Canvas:
         self._window._bytes = math.ceil(self._window._bits/8)
         self._window._buffer = None 
 
-        self._endian = endian
+        if endian == None:
+            if (1<<1) > 0:
+                self._endian = 'little'
+            else:
+                self._endian = 'big'
 
         self._flipV = -1
         self._flipH = -1
