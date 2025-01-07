@@ -124,20 +124,19 @@ class CanvasPainter:
         color = None
 
         if self._window._bits == 8: #OK
-            encodedData = ((R<<5)&0xE0 | (G<<2)&0X1C | (B>>5)&0x3 )&0xFF
-            color = int(encodedData).to_bytes(1,self._endian)
+            color = int((R<<5)&0xE0 | (G<<2)&0X1C | (B>>5)).to_bytes(1)
 
-        if self._window._bits == 16: #OK
+        if self._window._bits == 16: #OK <-- NEED VERIFY
             if isinstance(self._window, CanvasPainterWindow):
                 color = int( (R>>3)<<10 | (G>>3)<<5 | (B)>>3 ).to_bytes(2,self._endian)
             else:
-                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,self._endian) #FOR ST773 OBJECT
+                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,self._endian) #FOR ST7735
             
         if self._window._bits == 24: #OK
-            color = int( R<<16 | G<<8 | B ).to_bytes(3,self._endian)
+            color = int( B<<16 | G<<8 | R ).to_bytes(3)
 
         if self._window._bits == 32: #OK
-            color = int( (0xFF<<24|R<<16|G<<8|B) ).to_bytes(4,self._endian)
+            color = int( (B<<24) | (G<<16) | (R<<8)).to_bytes(4)
 
         if colorType ==  CanvasPainter.COLOR_LINE:
             self._tmpColor = self._color
