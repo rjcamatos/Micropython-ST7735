@@ -2,7 +2,7 @@ import struct
 import random
 import math
 
-class CanvasWindow:
+class CanvasPainterWindow:
 
     def __init__(self):
 
@@ -62,19 +62,20 @@ class CanvasWindow:
                 C += self._bytes
             R +=  self._columns*self._bytes
 
-class Canvas:
+class CanvasPainter:
 
-    def __init__(self,columns,rows,bits=16,window=None,endian=None):
+    def __init__(self,columns,rows,bits=16,window=None,endian='big'):
 
         self._window = window
-        if self._window == None: self._window = CanvasWindow()
+        if self._window == None: self._window = CanvasPainterWindow()
         self._window._columns = columns
         self._window._rows = rows
         self._window._bits = bits
         self._window._bytes = math.ceil(self._window._bits/8)
         self._window._buffer = None 
 
-        if endian == None:
+        self._endian = endian
+        if self._endian == None:
             if (1<<1) > 0:
                 self._endian = 'little'
             else:

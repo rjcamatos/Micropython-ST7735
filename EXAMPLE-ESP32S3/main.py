@@ -2,7 +2,7 @@
 import time
 import machine
 
-from Canvas import Canvas
+from CanvasPainter import CanvasPainter
 from ST7735 import ST7735
 
 from machine import Pin, SPI
@@ -15,7 +15,7 @@ led = machine.Pin(2, machine.Pin.OUT)
 
 spi = SPI(1, baudrate=33000000, polarity=0, phase=0, sck=Pin(17), mosi=Pin(18), miso=Pin(0))
 tft = ST7735(spi,4,5,6)
-data = Canvas(128,160,window=tft)
+data = CanvasPainter(128,160,window=tft)
 
 start_time = time.ticks_ms()
 data.setColor(0,255,0,True)
