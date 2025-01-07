@@ -128,7 +128,10 @@ class CanvasPainter:
             color = int(encodedData).to_bytes(1,self._endian)
 
         if self._window._bits == 16: #OK
-            color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,self._endian)
+            if isinstance(self._window, CanvasPainterWindow):
+                color = int( (R>>3)<<10 | (G>>3)<<5 | (B)>>3 ).to_bytes(2,self._endian)
+            else:
+                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,self._endian) #FOR ST773 OBJECT
             
         if self._window._bits == 24: #OK
             color = int( R<<16 | G<<8 | B ).to_bytes(3,self._endian)

@@ -15,7 +15,7 @@ led = machine.Pin(2, machine.Pin.OUT)
 
 spi = SPI(1, baudrate=33000000, polarity=0, phase=0, sck=Pin(17), mosi=Pin(18), miso=Pin(0))
 tft = ST7735(spi,4,5,6)
-data = CanvasPainter(128,160,window=tft)
+data = CanvasPainter(window=tft)
 
 start_time = time.ticks_ms()
 data.setColor(0,255,0,CanvasPainter.COLOR_FILL)
