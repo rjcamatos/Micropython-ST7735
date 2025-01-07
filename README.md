@@ -5,7 +5,7 @@ A Python ST7735 Canvas Painter for Micropython
 
 # *** Canvas Painter v0.2 API TO ST7735 ***
 
-** -- Construct the main object, bits should be 16 and window an ST7735 object, or it will be a virtual canvas buffer **
+** -- Construct the main object, bits should be 16 and window an ST7735 object, or it will be a virtual canvas painter buffer **
 
 Canvas(columns,rows,bits=16,window=None,endian='big')
 
