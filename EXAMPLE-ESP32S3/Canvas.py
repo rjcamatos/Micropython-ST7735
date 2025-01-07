@@ -361,37 +361,37 @@ class Canvas:
             for nByte in range(self._charTableWidth*self._charTableHeight*self._window._bytes):
                 self._window._windowBuffer[nByte] = self._charTable[nByte]
 
-    def printChar(self,xPos,yPos,char):
+    def printChar(self,xPos,yPos,char,fontSize=8):
         if self._charTable == None: return
 
         charIndexs = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
         charIndex = charIndexs.find(char)
  
-        atRow =  math.floor(charIndex/self._charTableMatrix[0])
+        atRow =  int(charIndex / self._charTableMatrix[0])
         atCol = charIndex - self._charTableMatrix[0]*atRow
 
-        #xRatio = self._charTableCharWidth / fontSize;
-        #yRatio = self._charTableCharHeight / fontSize;
+        xRatio = self._charTableCharWidth / fontSize;
+        yRatio = self._charTableCharHeight / fontSize;
 
-        print("ROW",atRow,"COL",atCol)
         self.setThikness(0)
         sRow = atRow * self._charTableCharHeight * self._charTableWidth * self._window._bytes
-        for r in range(self._charTableCharHeight):
-            sCol = atCol * self._charTableCharWidth * self._window._bytes
-            sRow = sRow + int( (self._charTableWidth * self._window._bytes))
-            for c in range(self._charTableCharWidth):
-                if self._charTable[-(sRow)+(sCol)] != 0x00:
+        for r in range(fontSize):
+            y = sRow + int(r*yRatio) * (self._charTableWidth * self._window._bytes)
+            if y == sRow: continue
+            sCol = atCol * int(self._charTableCharWidth * self._window._bytes)
+            for c in range(fontSize):
+                x = sCol + int(c*xRatio) * self._window._bytes
+                if self._charTable[-(y)+(x)] != 0x00:
                     self.setPixel(xPos+c,yPos+r)
-                sCol = sCol + int(self._window._bytes)
         self.restoreThikness()
 
 
-    def printChars(self,xPos,yPos,chars):
+    def printChars(self,xPos,yPos,chars,fontSize=8):
         if self._charTable == None: return
 
         for char in chars:
-            self.printChar(xPos,yPos,char)
-            xPos += self._charTableCharWidth
+            self.printChar(xPos,yPos,char,fontSize)
+            xPos += fontSize
 
     def flush(self):
         self._window.flush()

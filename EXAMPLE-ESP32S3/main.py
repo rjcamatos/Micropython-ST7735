@@ -72,6 +72,9 @@ xInc = 5
 rCircle = 5
 rInc = 5
 
+fSize = 8
+fInc = 1
+
 while True:
 
     led.value(1)
@@ -102,5 +105,16 @@ while True:
     rCircle += rInc
     end_time = time.ticks_ms()
     print("CIRCLE mS", (end_time-start_time) )
+
+    if fSize < 8: fInc *= -1
+    if fSize > 16: fInc *= -1
+    start_time = time.ticks_ms()
+    data.setColor(0,255,0,True)
+    data.setWindow(72,128,30,70,False)
+    data.printChars(20,20,'Oi',fSize)
+    data.flush()
+    fSize += fInc
+    end_time = time.ticks_ms()
+    print("CHAR mS", (end_time-start_time) )
 
     led.value(0)
