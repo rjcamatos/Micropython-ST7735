@@ -120,7 +120,8 @@ class CanvasPainter:
             color = int((R<<5)&0xE0 | (G<<2)&0X1C | (B>>5)).to_bytes(1)
 
         if self._window._bits == 16: #OK <-- NEED VERIFY
-            color = int( (R>>3)<<10 | (G>>3)<<5 | (B)>>3 ).to_bytes(2,'little')
+            color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B)>>3 ).to_bytes(2,'little')
+
             if self._window.__class__.__name__ == 'ST7735':
                 color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2) #FOR ST7735
             
@@ -441,16 +442,19 @@ class CanvasPainter:
 
         biCompression = 0
         biMasks = bytearray()
-        '''
+
         if self._window._bits == 16:
             biCompression = 3
-            Rmask = 0x00F80000
-            Gmask = 0xE0070000
-            Bmask = 0x1F000000
-            biMasks += Rmask.to_bytes(4)
-            biMasks += Gmask.to_bytes(4)
-            biMasks += Bmask.to_bytes(4)
-        '''
+            Rmask = 0xF800
+            Gmask = 0x07E0
+            Bmask = 0x001F
+            print(Rmask.to_bytes(4,'little'))
+            print(Gmask.to_bytes(4,'little'))
+            print(Bmask.to_bytes(4,'little'))
+            biMasks += Rmask.to_bytes(4,'little')
+            biMasks += Gmask.to_bytes(4,'little')
+            biMasks += Bmask.to_bytes(4,'little')
+
 
         #--DIB HEADER 40 bytes
         dib_header = struct.pack('<IIIHHIIIIII',
@@ -472,6 +476,7 @@ class CanvasPainter:
         out_file.write(dib_header)
 
         if self._window._bits == 16 and biCompression == 3:
+            print(biMasks)
             out_file.write(biMasks)
 
         if self._window._bits == 8:
