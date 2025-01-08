@@ -117,19 +117,19 @@ class CanvasPainter:
         color = None
 
         if self._window._bits == 8: #OK
-            color = int((R<<5)&0xE0 | (G<<2)&0X1C | (B>>5)).to_bytes(1)
+            color = int((R<<5)&0xE0 | (G<<2)&0X1C | (B>>5)).to_bytes(1,'little')
 
         if self._window._bits == 16: #OK <-- NEED VERIFY
             color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B)>>3 ).to_bytes(2,'little')
 
             if self._window.__class__.__name__ == 'ST7735':
-                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2) #FOR ST7735
+                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,'big') #FOR ST7735 THIS IS BIG ENDIAN
             
         if self._window._bits == 24: #OK
-            color = int( (B<<16) | (G<<8) | (R) ).to_bytes(3)
+            color = int( (R<<16) | (G<<8) | (B) ).to_bytes(3,'little')
 
         if self._window._bits == 32: #OK
-            color = int( (B<<24) | (G<<16) | (R<<8)).to_bytes(4)
+            color = int( (R<<21) | (G<<10) | (B) ).to_bytes(4,'little')
 
         if colorType ==  CanvasPainter.COLOR_LINE:
             self._tmpColor = self._color
@@ -345,11 +345,8 @@ class CanvasPainter:
             return
 
         if dib_header[4] == 16 and dib_header[5] == 3:
-            print("LOAD DIB HEADER",dib_header)
-            biColorMask= struct.unpack_from('<III',image.read(12))
-            print("R",int(biColorMask[0]).to_bytes(4))
-            print("G",int(biColorMask[1]).to_bytes(4))
-            print("B",int(biColorMask[2]).to_bytes(4))
+            #print("LOAD DIB HEADER",dib_header)
+            biColorMask= struct.unpack_from('<III',image.read(12)) #SEEK biColors Header
 
         width = dib_header[1]
         height = dib_header[2]
@@ -445,15 +442,9 @@ class CanvasPainter:
 
         if self._window._bits == 16:
             biCompression = 3
-            Rmask = 0xF800
-            Gmask = 0x07E0
-            Bmask = 0x001F
-            print(Rmask.to_bytes(4,'little'))
-            print(Gmask.to_bytes(4,'little'))
-            print(Bmask.to_bytes(4,'little'))
-            biMasks += Rmask.to_bytes(4,'little')
-            biMasks += Gmask.to_bytes(4,'little')
-            biMasks += Bmask.to_bytes(4,'little')
+            biMasks += int(0xF800).to_bytes(4,'little') #Red Mask
+            biMasks += int(0x07E0).to_bytes(4,'little') #Green Mask
+            biMasks += int(0x001F).to_bytes(4,'little') #Blue Mask
 
 
         #--DIB HEADER 40 bytes
@@ -464,11 +455,11 @@ class CanvasPainter:
             0,                              #ColorPlanes
             self._window._bits,             #BitsPerPixel
             biCompression,                  #BiRGB (biCompression)
-            rawSize,                             #RawBitmapSize
+            rawSize,                        #RawBitmapSize
             self._window._columns,          #PrintResolutionH
             self._window._rows,             #PrintResolutionV
-            colorsInPallet,                              #NumberOfColorsInPallet
-            colorsImportant                              #ImportantColors
+            colorsInPallet,                 #NumberOfColorsInPallet
+            colorsImportant                 #ImportantColors
         )
 
         #WRITE TO FILE
@@ -476,7 +467,6 @@ class CanvasPainter:
         out_file.write(dib_header)
 
         if self._window._bits == 16 and biCompression == 3:
-            print(biMasks)
             out_file.write(biMasks)
 
         if self._window._bits == 8:
