@@ -7,7 +7,7 @@ A Python ST7735 Canvas Painter for Micropython
 
 # -- Construct the main object, bits should be 16 and window an ST7735 object
 
-CanvasPainter(columns=128,rows=160,bits=16,window=None,endian='big')
+CanvasPainter(columns=128,rows=160,bits=16,window=None)
 
 # -- Set the the window area to be draw (Mandatory, at least once)
 
