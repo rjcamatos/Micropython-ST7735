@@ -69,6 +69,10 @@ rInc = 5
 fSize = 8
 fInc = 1
 
+angleStart = 5
+angleEnd = 10
+angleInc = 5
+
 while True:
 
     led.value(1)
@@ -86,6 +90,15 @@ while True:
     end_time = time.ticks_ms()
     print("HLine mS", (end_time-start_time) )
 
+
+    if angleEnd > 360:
+        angleEnd = 360
+        angleStart += 5
+
+    if angleStart >= angleEnd:
+        angleStart = 5
+        angleEnd = 10
+
     if rCircle > 25: rInc *= -1
     if rCircle < 5: rInc *= -1
     if rCircle < 1: rCircle = 1
@@ -95,11 +108,14 @@ while True:
     data.setThikness(1)
     data.setColor(0,0,255)
     data.setColor(255,0,0,CanvasPainter.COLOR_FILL)
-    data.drawCircle(30,30,rCircle,False,90,360)
+    data.drawCircle(30,30,rCircle,False,angleStart,angleEnd)
     data.flush()
     rCircle += rInc
+    angleEnd += angleInc
     end_time = time.ticks_ms()
     print("CIRCLE mS", (end_time-start_time) )
+
+
 
     if fSize < 8: fInc *= -1
     if fSize > 16: fInc *= -1
