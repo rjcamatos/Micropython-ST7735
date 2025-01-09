@@ -2,6 +2,8 @@
 import time
 import machine
 
+import sys
+
 from CanvasPainter import CanvasPainter
 from ST7735 import ST7735
 
