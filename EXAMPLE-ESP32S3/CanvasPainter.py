@@ -68,7 +68,7 @@ class CanvasPainter:
     COLOR_FILL = 1
     COLOR_TRANSPARENCY = 2
 
-    def __init__(self,columns=128,rows=160,bits=16,window=None):
+    def __init__(self,columns=128,rows=360,bits=16,window=None):
 
         self._window = window
         if self._window == None: self._window = CanvasPainterWindow()
@@ -292,24 +292,32 @@ class CanvasPainter:
         self.drawRectangle(xPos,yPos,size,size,fill)
  
 
-    def drawCircle(self,xPos,yPos,radius,fill=False):
-        len = 2*math.pi*radius
-        inc = 360/(len*math.pi)
-        angle = 0
-        while angle < 360:
-            x = int(radius * math.cos(angle))
-            y = int(radius * math.sin(angle))
-            if fill == True:
-                tmpColor = self._color
-                self._color = self._fillColor
-                self.setThikness(0)
-                for n in range(radius-self._thikness):
-                    x = int(n * math.cos(angle))
-                    y = int(n * math.sin(angle))
+    def drawCircle(self,xPos,yPos,radius,fill=False,startAngle=0,endAngle=360):
+
+        if fill == True:
+            self.setThikness(0)
+            tmpColor = self._color
+            self._color = self._fillColor
+            for R in range(radius-self._thikness):
+                if R < 1: continue
+                len = ((2/360)*(endAngle-startAngle)) * math.pi * radius
+                inc = (endAngle-startAngle)/(len*2.3) # 2.3 is pixel resolution
+                angle = startAngle
+                while angle < endAngle:
+                    x = int(R * math.cos(math.radians(angle)))
+                    y = int(R * math.sin(math.radians(angle)))
                     self.setPixel(xPos+x,yPos+y)
-                self.restoreThikness()
-                self._color = tmpColor
-            self.setPixel(xPos+x,yPos+y)      
+                    angle += inc
+            self._color = tmpColor
+            self.restoreThikness()
+
+        len = ((2/360)*(endAngle-startAngle)) * math.pi * radius
+        inc = (endAngle-startAngle)/len
+        angle = startAngle
+        while angle < endAngle:
+            x = int(radius * math.cos(math.radians(angle)))
+            y = int(radius * math.sin(math.radians(angle)))
+            self.setPixel(xPos+x,yPos+y)
             angle += inc
 
     def loadRaw(self,xPos,yPos,width,height,rawBytes):

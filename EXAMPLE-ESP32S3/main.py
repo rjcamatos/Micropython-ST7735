@@ -94,7 +94,8 @@ while True:
     data.setWindow(34,94,90,150,False)
     data.setThikness(1)
     data.setColor(0,0,255)
-    data.drawCircle(30,30,rCircle)
+    data.setColor(255,0,0,CanvasPainter.COLOR_FILL)
+    data.drawCircle(30,30,rCircle,False,90,360)
     data.flush()
     rCircle += rInc
     end_time = time.ticks_ms()

@@ -63,7 +63,7 @@ drawSquare(xPos,yPos,size,fill=False):
 
 # -- Draw a circle, if "fill=True", fill with the fill color
 
-drawCircle(xPos,yPos,radius,fill=False):
+drawCircle(xPos,yPos,radius,fill=False,startAngle=0,endAngle=360):
 
 # -- Load image at given position from raw bytes (need to be same bit depth)
 
