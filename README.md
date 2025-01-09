@@ -1,6 +1,6 @@
-# Python-ST7735 Micropython
+# Micropython-ST7735
 
-A Python ST7735 Canvas Painter for Micropython
+A Python Canvas Painter Interface for Micropython ST7735
 
 
 # *** Canvas Painter v0.2 API TO ST7735 ***
