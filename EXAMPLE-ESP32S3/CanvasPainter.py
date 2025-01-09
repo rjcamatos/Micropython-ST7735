@@ -68,7 +68,7 @@ class CanvasPainter:
     COLOR_FILL = 1
     COLOR_TRANSPARENCY = 2
 
-    def __init__(self,columns=128,rows=180,bits=16,window=None):
+    def __init__(self,columns=128,rows=160,bits=16,window=None):
 
         self._window = window
         if self._window == None: self._window = CanvasPainterWindow()
@@ -307,7 +307,7 @@ class CanvasPainter:
                     x = int(R * math.cos(math.radians(angle)))
                     y = int(R * math.sin(math.radians(angle)))
                     self.setPixel(xPos+x,yPos+y)
-                    angle += inc
+                    angle += inc + (self._thikness/2)
             self._color = tmpColor
             self.restoreThikness()
 
