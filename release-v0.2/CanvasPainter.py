@@ -121,9 +121,9 @@ class CanvasPainter:
 
         if self._window._bits == 16: #OK
             if self._window.__class__.__name__ == 'ST7735':
-                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,'big')
+                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF8)>>3 ).to_bytes(2,'big')
             else:
-                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B)>>3 ).to_bytes(2,'little')
+                color = int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF8)>>3 ).to_bytes(2,'little')
             
         if self._window._bits == 24: #OK
             color = int( (R<<16) | (G<<8) | (B) ).to_bytes(3,'little')

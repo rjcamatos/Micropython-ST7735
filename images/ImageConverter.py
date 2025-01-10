@@ -11,7 +11,7 @@ OUT_FILE = './images/picture16bits.bmp'
 # ---------------------------//--------------------------------
 
 def pack_color(R,G,B):
-    return int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF1)>>3 ).to_bytes(2,'big')
+    return int( (R&0xF8)<<8 | (G&0xFC)<<3 | (B&0xF8)>>3 ).to_bytes(2,'big')
 
 def conv(in_file,out_file):
     out_file = open(out_file,'wb')
