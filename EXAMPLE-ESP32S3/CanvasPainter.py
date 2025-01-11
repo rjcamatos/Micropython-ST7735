@@ -426,18 +426,30 @@ class CanvasPainter:
         self._window.flush()
 
     def saveBitmap(self,file):
+        headerSize = 0
         rawSize = self._window._columns*self._window._rows*self._window._bytes
+
+        headerSize += 14 #BMP HEADER
+        headerSize += 50 #DIB HEADER
+        
+        if self._window._bits == 8:
+            headerSize += 4*256 #COLOR PALLET
+
+        if self._window._bits == 16:
+            headerSize += 12 #BI COLORS
+
 
         out_file = open(file,'wb')
         # --- THE BITMAP HEADER ---
         #--BMP HEADER 14 bytes
         bmp_header = struct.pack('<2sI2s2sI',
             b'BM',       #BmDescription
-            14 + 40,      #FileSize #THE SISZE OF THE HEADER
+            headerSize+rawSize,      #FileSize #THE SISZE OF THE HEADER
             b'\x00\x00',  #ApplicationSpecific_1
             b'\x00\x00',  #ApplicationSpecific_2
-            14+40        #PixelArrayOffset
+            headerSize        #PixelArrayOffset
         )
+
 
         colorsInPallet = 0
         colorsImportant = 0
@@ -451,9 +463,8 @@ class CanvasPainter:
         if self._window._bits == 16:
             biCompression = 3
             biMasks += int(0xF800).to_bytes(4,'little') #Red Mask
-            biMasks += int(0x07E0).to_bytes(4,'little') #Green Mask
-            biMasks += int(0x001F).to_bytes(4,'little') #Blue Mask
-
+            biMasks += int(0x7E0).to_bytes(4,'little') #Blue Mask
+            biMasks += int(0x1F).to_bytes(4,'little') #Green Mask
 
         #--DIB HEADER 40 bytes
         dib_header = struct.pack('<IIIHHIIIIII',
@@ -463,7 +474,7 @@ class CanvasPainter:
             0,                              #ColorPlanes
             self._window._bits,             #BitsPerPixel
             biCompression,                  #BiRGB (biCompression)
-            rawSize,                        #RawBitmapSize
+            headerSize + rawSize,                        #RawBitmapSize
             self._window._columns,          #PrintResolutionH
             self._window._rows,             #PrintResolutionV
             colorsInPallet,                 #NumberOfColorsInPallet
@@ -474,11 +485,11 @@ class CanvasPainter:
         out_file.write(bmp_header)
         out_file.write(dib_header)
 
-        if self._window._bits == 16 and biCompression == 3:
-            out_file.write(biMasks)
-
         if self._window._bits == 8:
             out_file.write(self._pallet_8bits_color())
+
+        if self._window._bits == 16 and biCompression == 3:
+            out_file.write(biMasks)
 
         out_file.write(self._window._buffer)
 
