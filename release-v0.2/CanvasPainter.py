@@ -430,13 +430,13 @@ class CanvasPainter:
         rawSize = self._window._columns*self._window._rows*self._window._bytes
 
         headerSize += 14 #BMP HEADER
-        headerSize += 50 #DIB HEADER
+        headerSize += 40 #DIB HEADER
         
         if self._window._bits == 8:
             headerSize += 4*256 #COLOR PALLET
 
         if self._window._bits == 16:
-            headerSize += 12 #BI COLORS
+            headerSize += 4*3 #BI COLORS
 
 
         out_file = open(file,'wb')
