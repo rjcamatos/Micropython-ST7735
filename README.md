@@ -3,6 +3,11 @@
 A Python Canvas Painter Interface for Micropython ST7735
 
 
+
+https://github.com/user-attachments/assets/dd151829-4af6-4112-a315-b3c7d8768034
+
+
+
 # *** Canvas Painter v0.2 API TO ST7735 ***
 
 # -- Construct the main object, bits should be 16 and window an ST7735 object
